@@ -243,7 +243,17 @@ function bindEvents(){
   $('#holdingDetail').addEventListener('click',e=>{const b=e.target.closest('[data-detail-refresh]');if(b)refreshHolding(+b.dataset.detailRefresh);});
   $('#refreshHoldingsBtn').addEventListener('click',refreshAllHoldings);
   $('#analysisTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)renderAnalysis(b.dataset.analysis);});
-  $$('.learn-list button').forEach(b=>b.addEventListener('click',()=>{const l=lessons[b.dataset.lesson];$('#lessonTitle').textContent=l.title;$('#lessonBody').innerHTML=l.body;$('#lessonDialog').showModal();}));$('#closeLessonBtn').addEventListener('click',()=>$('#lessonDialog').close());
+  $$('[data-lesson]').forEach(b => {
+  b.addEventListener('click', () => {
+    const l = lessons[b.dataset.lesson];
+
+    if (!l) return;
+
+    $('#lessonTitle').textContent = l.title;
+    $('#lessonBody').innerHTML = l.body;
+    $('#lessonDialog').showModal();
+  });
+});$('#closeLessonBtn').addEventListener('click',()=>$('#lessonDialog').close());
   $('#refreshFxBtn')?.addEventListener('click',()=>updateFxRates(true,true));$('#usdAmount').addEventListener('input',updateConverter);$('#fxTargetTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;state.targetCurrency=b.dataset.currency;$$('#fxTargetTabs button').forEach(x=>x.classList.toggle('active',x===b));updateConverter();});$('#fxList').addEventListener('click',e=>{const row=e.target.closest('.market-row');if(!row)return;const c=row.querySelector('span')?.textContent.split('/')[0].trim();if(c&&state.fx[c]){state.fromCurrency=c;updateConverter();}});
   $('.swap').addEventListener('click',()=>{const old=state.fromCurrency;state.fromCurrency=state.targetCurrency;state.targetCurrency=old;if(!['JPY','USD','EUR'].includes(state.targetCurrency))state.targetCurrency='JPY';$$('#fxTargetTabs button').forEach(x=>x.classList.toggle('active',x.dataset.currency===state.targetCurrency));updateConverter();});
   $$('.tabs').forEach(tab=>{if(['holdingTabs','analysisTabs','fxTargetTabs'].includes(tab.id))return;tab.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.nav)return;[...tab.children].forEach(x=>x.classList.toggle('active',x===b));if(tab.closest('#view-market')){const q={日本株:'Toyota',米国株:'Apple',ETF:'SPY'}[b.textContent];if(q){$('#stockSearch').value=q;searchStocks(q);}}});});
