@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stock Note</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="brand-panel">
+      <span class="eyebrow">PREMIUM INVESTMENT APP</span>
+      <h1>Stock Note</h1>
+      <p class="brand-copy">美しく、わかりやすく、<br>あなたの資産をもっとスマートに。</p>
+      <div class="brand-list">
+        <span>◌ 直感的な資産管理</span>
+        <span>◌ リアルタイム株価チェック</span>
+        <span>◌ グラフで簡単分析</span>
+        <span>◌ 為替レートを一目で確認</span>
+        <span>◌ 初心者向け学習コンテンツ</span>
+      </div>
+      <div class="leaf-art">❦</div>
+    </aside>
+
+    <main class="phone-wrap">
+      <section class="phone">
+        <header class="topbar">
+          <div>
+            <span class="section-kicker">ホーム</span>
+            <h2>資産サマリー</h2>
+          </div>
+          <button class="icon-btn" id="settingsBtn" aria-label="API設定">⚙</button>
+        </header>
+
+        <div id="view-home" class="view active">
+          <article class="hero-card">
+            <div class="muted">総資産</div>
+            <div class="hero-value" id="totalAsset">¥1,287,654</div>
+            <div class="gain">今日 +¥24,850 (+1.97%)</div>
+            <canvas id="assetMiniChart" height="120"></canvas>
+            <div class="segmented small">
+              <button class="active">1日</button><button>1週間</button><button>1ヶ月</button><button>3ヶ月</button><button>1年</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title-row"><h3>資産の内訳</h3><span class="mini-badge">LIVE</span></div>
+            <div class="split">
+              <div class="chart-box"><canvas id="allocationChart"></canvas></div>
+              <div class="legend-list" id="allocationLegend"></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-title-row"><h3>今日のマーケット</h3><button class="text-btn" data-nav="market">もっと見る ›</button></div>
+            <div class="market-list" id="marketList"></div>
+          </article>
+        </div>
+
+        <div id="view-market" class="view">
+          <div class="tabs"><button>日本株</button><button class="active">米国株</button><button>ETF</button><button data-nav="fx">為替</button></div>
+          <label class="search"><span>⌕</span><input id="stockSearch" placeholder="銘柄名・ティッカーを検索（例 AAPL / Toyota / 7203）" /></label>
+          <div id="searchStatus" class="api-inline-note">入力すると実際の銘柄を検索します。</div>
+          <div id="searchResults" class="search-results"></div>
+          <article class="card stock-feature">
+            <div class="stock-head"><div><div class="stock-name" id="featureName">Apple Inc.</div><div class="ticker" id="featureTicker">AAPL</div></div><div class="stock-price"><span id="featurePrice">$229.40</span> <span class="gain" id="featureChange">+1.82%</span></div></div>
+            <div class="muted" id="featureYen">日本円換算：約 ¥34,030</div>
+            <div class="quote-meta"><span id="quoteStatus" class="mini-badge">DEMO</span><span id="quoteUpdated" class="muted">デモデータ</span></div>
+            <canvas id="stockChart" height="210"></canvas>
+            <div class="segmented" id="stockPeriods"><button data-period="1D" class="active">1日</button><button data-period="1W">1週間</button><button data-period="1M">1ヶ月</button><button data-period="3M">3ヶ月</button><button data-period="1Y">1年</button><button data-period="5Y">5年</button></div>
+            <div class="feature-actions"><button class="gold-btn" id="addFeatureHolding">＋ 保有株に追加</button><button class="soft-btn" id="refreshQuoteBtn">↻ 更新</button></div>
+          </article>
+          <article class="card"><h3>主要指数</h3><div class="market-list" id="indexList"></div></article>
+          <article class="card news-card"><div class="card-title-row"><div><div class="muted">関連ニュース</div><h3 id="newsHeading">AAPL の最新ニュース</h3></div><button id="refreshNewsBtn" class="text-btn">更新</button></div><div id="newsList" class="news-list"><div class="news-placeholder">APIキーを設定すると最新ニュースを取得します。</div></div></article>
+        </div>
+
+        <div id="view-holdings" class="view">
+          <div class="tabs" id="holdingTabs"><button data-mode="all" class="active">全体</button><button data-mode="single">個別</button></div>
+          <article class="card summary-grid">
+            <div><span>投資額</span><strong id="investedAmount">¥1,054,800</strong></div>
+            <div><span>現在</span><strong id="currentAmount">¥1,287,654</strong></div>
+            <div><span>損益</span><strong class="gain" id="profitAmount">+¥232,854</strong></div>
+          </article>
+          <article class="card"><h3>保有資産の推移</h3><canvas id="portfolioChart" height="180"></canvas></article>
+          <div class="card-title-row"><h3>保有銘柄</h3><div class="feature-actions"><button id="refreshHoldingsBtn" class="soft-btn">↻ 株価更新</button><button id="addHoldingBtn" class="gold-btn">＋追加</button></div></div>
+          <div id="holdingsList" class="holdings-list"></div><article id="holdingDetail" class="card hidden"></article>
+        </div>
+
+        <div id="view-analysis" class="view">
+          <div class="tabs" id="analysisTabs"><button data-analysis="asset" class="active">資産分析</button><button data-analysis="stock">銘柄分析</button><button data-analysis="history">取引履歴</button></div>
+          <article class="card"><h3>資産の構成</h3><div class="split"><div class="chart-box"><canvas id="analysisPie"></canvas></div><div class="legend-list" id="analysisLegend"></div></div></article>
+          <article class="card"><h3>業種別割合</h3><div class="bar-list" id="sectorBars"></div></article>
+          <article class="card"><h3 id="analysisTitle">あなたの傾向</h3><div id="analysisContent"><p class="analysis-copy">テクノロジー比率が高めです。値動きが大きくなりやすいので、業種分散の割合も確認してみましょう。</p></div></article>
+        </div>
+
+        <div id="view-learn" class="view">
+          <article class="card learn-hero"><div><span class="mini-badge">はじめての株式投資</span><h3>株って、そもそも何？</h3><p>株式は、会社が事業に必要なお金を集めるために発行するものです。株を買うと、その会社の一部を持つ「株主」になります。</p><p class="learn-note">※このページは学習用です。特定の銘柄の購入をすすめるものではありません。</p></div><div class="stock-illustration" aria-label="株式の仕組み"><span class="person-icon">👤</span><span class="flow-arrow">投資 →</span><span class="company-icon">🏢</span><span class="flow-arrow">→ 成長</span><span class="growth-icon">📈</span></div></article>
+
+          <article class="card learn-section"><div class="learn-section-title"><span>01</span><div><small>まずここから</small><h3>株を買うと何が起こる？</h3></div></div><div class="stock-flow"><div><b>① 投資家</b><small>証券会社を通して株を買う</small></div><i>→</i><div><b>② 会社</b><small>集めた資金を事業・成長に使う</small></div><i>→</i><div><b>③ 株主</b><small>値上がり・配当などの機会</small></div></div><div class="example-box"><strong>例：1株1,000円を10株買った場合</strong><p>購入金額は <b>10,000円</b>。その後1株1,200円なら評価額は12,000円、1株800円なら8,000円です。売却するまでは「含み益・含み損」で、価格は毎日変動します。</p></div></article>
+
+          <article class="card learn-section"><div class="learn-section-title"><span>02</span><div><small>利益とリスク</small><h3>株で利益が出る3つのしくみ</h3></div></div><div class="benefit-grid"><div class="mini-learn-card"><span>📈</span><b>値上がり益</b><p>買った価格より高く売れたときの利益。逆に安く売ると損失になります。</p></div><div class="mini-learn-card"><span>💰</span><b>配当金</b><p>会社が利益などの一部を株主へ還元するお金。必ず支払われるとは限りません。</p></div><div class="mini-learn-card"><span>🎁</span><b>株主優待</b><p>一部の日本企業が自社商品やサービス券などを株主へ提供する制度です。</p></div></div><div class="risk-callout"><b>⚠ 株価は下がることもあります</b><p>業績悪化、景気、金利、為替、ニュース、災害、市場心理など多くの要因で動きます。投資元本が保証されている商品ではありません。</p></div></article>
+
+          <article class="card learn-section"><div class="learn-section-title"><span>03</span><div><small>価格の動き</small><h3>株価はなぜ上がったり下がったりする？</h3></div></div><div class="price-balance"><div class="demand up"><span>買いたい人が多い</span><strong>需要 ↑</strong></div><div class="price-center">株価<br><b>↕</b></div><div class="demand down"><span>売りたい人が多い</span><strong>供給 ↑</strong></div></div><table class="learn-table"><thead><tr><th>主な要因</th><th>見方の例</th></tr></thead><tbody><tr><td>会社の業績</td><td>売上・利益・今後の見通し</td></tr><tr><td>景気・金利</td><td>景気拡大/後退、中央銀行の政策</td></tr><tr><td>為替</td><td>円高・円安が輸出入企業や海外株に影響</td></tr><tr><td>ニュース</td><td>新製品、M&amp;A、規制、事故など</td></tr><tr><td>投資家の期待</td><td>将来の成長期待が価格に織り込まれる</td></tr></tbody></table></article>
+
+          <article class="card learn-section"><div class="learn-section-title"><span>04</span><div><small>数字を読む</small><h3>銘柄を見るときの基本指標</h3></div></div><div class="metric-cards"><button data-lesson="per"><b>PER</b><span>利益から株価を見る</span><small>株価 ÷ 1株利益</small></button><button data-lesson="pbr"><b>PBR</b><span>純資産から株価を見る</span><small>株価 ÷ 1株純資産</small></button><button data-lesson="roe"><b>ROE</b><span>資本を使う効率を見る</span><small>利益 ÷ 自己資本</small></button><button data-lesson="yield"><b>配当利回り</b><span>株価に対する配当を見る</span><small>1株配当 ÷ 株価</small></button></div><p class="learn-note">「PERが低い＝必ず割安」のように1つの数字だけで判断せず、同業他社・過去の水準・成長性などと合わせて確認します。</p></article>
+
+          <article class="card learn-section"><div class="learn-section-title"><span>05</span><div><small>チャート入門</small><h3>ローソク足の見方</h3></div></div><div class="candle-guide"><div class="candle-item"><div class="candle bullish"><i></i></div><b>陽線</b><small>終値 ＞ 始値</small></div><div class="candle-item"><div class="candle bearish"><i></i></div><b>陰線</b><small>終値 ＜ 始値</small></div><div class="ohlc"><span>高値 ─ その日の最も高い価格</span><span>始値 ─ 最初についた価格</span><span>終値 ─ 最後についた価格</span><span>安値 ─ その日の最も安い価格</span></div></div><button class="wide soft-btn" data-lesson="chart">チャートをもっと詳しく見る →</button></article>
+
+          <article class="card learn-section"><div class="learn-section-title"><span>06</span><div><small>リスクを小さく考える</small><h3>長期・積立・分散の考え方</h3></div></div><div class="three-principles"><div><span>🕰️</span><b>長期</b><small>短期の値動きだけでなく長い期間で考える</small></div><div><span>🪙</span><b>積立</b><small>一度にまとめず、時期を分けて投資する方法</small></div><div><span>🧺</span><b>分散</b><small>国・業種・資産などを1つに集中させない</small></div></div><p class="learn-note">金融庁も、投資は生活資金とは分けた余裕資金で行い、目的やライフプランに合う商品を選ぶことを案内しています。</p></article>
+
+          <article class="card"><h3>テーマ別に詳しく学ぶ</h3><div class="learn-list"><button data-lesson="basic">📖 株の基礎知識 <span>基礎</span></button><button data-lesson="chart">📈 チャートの見方 <span>分析</span></button><button data-lesson="fx">💱 為替と株価の関係 <span>海外株</span></button><button data-lesson="risk">🛡️ リスクと分散 <span>重要</span></button><button data-lesson="nisa">🌱 NISAの基本 <span>制度</span></button></div></article>
+
+          <article class="card"><h3>株の用語辞典</h3><details><summary>時価総額</summary><p>「株価 × 発行済株式数」で計算する、会社の市場での規模を表す目安です。</p></details><details><summary>PER（株価収益率）</summary><p>株価が1株当たり利益（EPS）の何倍まで買われているかを見る指標です。同じ業種や企業自身の過去と比較して使います。</p></details><details><summary>PBR（株価純資産倍率）</summary><p>株価が1株当たり純資産（BPS）の何倍かを見る指標です。企業の資産面から株価水準を見る手掛かりです。</p></details><details><summary>ROE（自己資本利益率）</summary><p>株主から預かった資本を使って、どれくらい利益を生み出したかを見る指標です。</p></details><details><summary>配当金・配当利回り</summary><p>配当金は会社から株主への利益還元の一つ。配当利回りは「年間1株配当 ÷ 株価 × 100」で計算する目安です。</p></details><details><summary>ETF</summary><p>証券取引所に上場している投資信託です。株式のように市場で売買でき、複数銘柄へ分散できる商品もあります。</p></details><details><summary>指値・成行</summary><p>指値は売買価格を指定する注文、成行は価格を指定せず成立を優先する注文です。</p></details><details><summary>損切り</summary><p>損失がさらに大きくなる可能性を考え、保有している商品を損失が出ている状態で売却することです。</p></details></article>
+
+          <article class="card official-links"><div class="card-title-row"><div><span class="mini-badge">公式情報</span><h3>もっと詳しく調べる</h3></div></div><p>制度や用語は、信頼できる公的・公式情報でも確認できます。</p><a href="https://www.fsa.go.jp/policy/nisa2/" target="_blank" rel="noopener noreferrer"><span>🏛️</span><div><b>金融庁 NISA特設サイト</b><small>NISA・資産形成の制度を確認</small></div><i>↗</i></a><a href="https://www.jpx.co.jp/corporate/learning/resources/01.html" target="_blank" rel="noopener noreferrer"><span>📚</span><div><b>日本取引所グループ 学習資料</b><small>「株式ABC」など初心者向け資料</small></div><i>↗</i></a><a href="https://quote.jpx.co.jp/jpxhp/main/index.aspx?F=stock_search" target="_blank" rel="noopener noreferrer"><span>🔎</span><div><b>JPX 株価検索</b><small>日本の上場銘柄を公式情報から検索</small></div><i>↗</i></a><a href="https://www.jsda.or.jp/" target="_blank" rel="noopener noreferrer"><span>💡</span><div><b>日本証券業協会</b><small>投資初心者向け・金融教育情報</small></div><i>↗</i></a></article>
+        </div>
+
+        <div id="view-fx" class="view">
+          <article class="card fx-card">
+            <div class="card-title-row"><h3>通貨コンバーター</h3><span class="mini-badge">FX</span></div>
+            <div class="tabs compact" id="fxTargetTabs"><button data-currency="JPY" class="active">JPY</button><button data-currency="USD">USD</button><button data-currency="EUR">EUR</button></div>
+            <label class="currency-field"><span id="fromCurrencyLabel">USD</span><input id="usdAmount" type="number" value="1000" min="0"></label>
+            <div class="swap">⇅</div>
+            <div class="currency-result"><span id="toCurrencyLabel">JPY</span><strong id="jpyResult">¥148,320</strong><small id="fxRateText">1 USD = 148.32 JPY</small><small id="fxUpdated">デモレート</small><button class="soft-btn" id="refreshFxBtn" type="button">↻ 為替を更新</button></div>
+          </article>
+          <article class="card"><h3>主要為替レート</h3><div class="market-list" id="fxList"></div></article>
+          <article class="card"><h3>為替の豆知識</h3><p>円安になると、海外株の円換算評価額が上がることがあります。株価だけでなく為替も一緒に確認しましょう。</p></article>
+        </div>
+
+        <nav class="bottom-nav">
+          <button class="active" data-view="home"><span>⌂</span>ホーム</button>
+          <button data-view="market"><span>⌁</span>マーケット</button>
+          <button data-view="holdings"><span>♡</span>保有株</button>
+          <button data-view="analysis"><span>◔</span>分析</button>
+          <button data-view="learn"><span>▣</span>学ぶ</button>
+          <button data-view="fx"><span>¤</span>為替</button>
+        </nav>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="holdingDialog">
+    <form method="dialog" id="holdingForm" class="dialog-card">
+      <div class="card-title-row"><h3>保有株を追加</h3><button class="icon-btn" id="closeHoldingDialog" type="button" aria-label="閉じる">×</button></div>
+      <label>銘柄名<input name="name" required placeholder="例：Sony Group"></label>
+      <label>ティッカー<input name="ticker" required placeholder="例：6758"></label>
+      <label>株数<input name="shares" type="number" min="0.01" step="0.01" required></label>
+      <label>購入価格<input name="buyPrice" type="number" min="0" step="0.01" required></label>
+      <label>現在価格<input name="currentPrice" type="number" min="0" step="0.01" required></label>
+      <label>通貨<select name="currency"><option value="JPY">JPY</option><option value="USD">USD</option><option value="EUR">EUR</option></select></label>
+      <button class="gold-btn wide" value="default">保存する</button>
+    </form>
+  </dialog>
+
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="dialog-card" id="settingsForm">
+      <div class="card-title-row"><div><h3>実データAPI設定</h3><p class="muted">Alpha Vantage APIキーを保存すると、株価・銘柄検索・為替・ニュースを取得します。</p></div><button class="icon-btn" value="cancel">×</button></div>
+      <label>Alpha Vantage API Key<input id="apiKeyInput" autocomplete="off" placeholder="APIキーを貼り付け"></label>
+      <label class="check-row"><input id="realtimeEntitlement" type="checkbox"> 米国株のリアルタイム契約を利用する <small>（有料契約者のみ）</small></label>
+      <div class="api-quota"><strong id="apiUsage">本日のAPI使用目安：0 / 25 回</strong><span id="apiRemaining">残り目安 25 回</span></div>
+      <div id="apiConnectionStatus" class="api-status">未接続</div>
+      <button class="gold-btn wide" id="saveApiBtn" value="default">保存して接続テスト</button>
+      <button class="soft-btn wide" id="clearApiBtn" type="button">APIキーを削除</button>
+      <p class="api-help">無料枠節約モード：同じデータは一定時間キャッシュし、画面を開いただけではニュースや為替を自動取得しません。「更新」を押した時だけ新しいAPI通信を行います。使用回数はこのブラウザ内の目安です。</p>
+    </form>
+  </dialog>
+
+  <dialog id="lessonDialog"><div class="dialog-card"><div class="card-title-row"><h3 id="lessonTitle">学習コンテンツ</h3><button class="icon-btn" id="closeLessonBtn">×</button></div><div id="lessonBody" class="lesson-body"></div></div></dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
