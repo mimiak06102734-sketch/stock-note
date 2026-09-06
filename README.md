@@ -314,6 +314,7 @@ URLまたはQRコードからスマートフォンでもアクセスできる形
 Netlify公開後にURLを掲載します。
 
 **Live Demo：準備中**
+<img width="746" height="427" alt="image" src="https://github.com/user-attachments/assets/a26dd957-3b60-4cfa-aa60-95f0dca3a1da" />
 
 ---
 
