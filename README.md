@@ -311,7 +311,12 @@ URLまたはQRコードからスマートフォンでもアクセスできる形
 
 ## 🌐 Live Demo
 
-(https://stock-note-mimi.netlify.app)
+実際に動作するアプリはこちらから確認できます。
+
+https://stock-note-mimi.netlify.app
+
+PC・スマートフォンの両方に対応しています。
+
 ---
 
 ## 📷 Screenshots
