@@ -311,9 +311,6 @@ URLまたはQRコードからスマートフォンでもアクセスできる形
 
 ## 🌐 Live Demo
 
-Netlify公開後にURLを掲載します。
-
-**Live Demo：準備中**
 (https://stock-note-mimi.netlify.app)
 ---
 
