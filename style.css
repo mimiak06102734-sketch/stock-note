@@ -10,3 +10,21 @@
 /* Extra breathing room around key learning sections */
 #view-learn .learn-hero{margin-bottom:14px}
 #view-learn .official-links{margin-bottom:24px}
+
+/* ===== 学ぶページ：ラベルとタイトルの間隔 ===== */
+
+#view-learn .section-label,
+#view-learn .mini-badge {
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+/* タイトル側の余白をリセット */
+#view-learn h3 {
+  margin-top: 0;
+}
+
+/* 「公式情報」も同じ間隔にする */
+#view-learn .official-links .mini-badge {
+  margin-bottom: 12px;
+}
