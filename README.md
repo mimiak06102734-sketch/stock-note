@@ -12,7 +12,7 @@ PC・スマートフォンの両方からアクセスできます。
 ### 📱 QRコード
 
 スマートフォンのカメラで読み取ると、公開版Stock Noteを開けます。
-![Stock Note QR Code](ストックノートQR.png)
+![Stock Note QR Code](./stock-note-qr.png)
 
 ## 💡 開発のきっかけ
 
